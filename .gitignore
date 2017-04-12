@@ -49,19 +49,11 @@ coverage.xml
 *.mo
 *.pot
 
-# Django stuff:
-*.log
-local_settings.py
-
 # Flask stuff:
 instance/
 .webassets-cache
+.DS_Store
 
-# Scrapy stuff:
-.scrapy
-
-# Sphinx documentation
-docs/_build/
 
 # PyBuilder
 target/
@@ -71,9 +63,6 @@ target/
 
 # pyenv
 .python-version
-
-# celery beat schedule file
-celerybeat-schedule
 
 # dotenv
 .env
