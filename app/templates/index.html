@@ -47,11 +47,11 @@
         <div class="col-md-4" style="word-wrap: break-word;">
           <div class="card my-2">
             <div class="card-block">
-              <p class="card-text  mt-3">{{ msg.content }}</p>
-              <br><p class="card-subtitle text-info"><i class="fa fa-user" aria-hidden="true"> {{ msg.username }}</i></p>
-              <p class="card-text  mt-3"><i class="fa fa-slack" aria-hidden="true"> {{ msg.channel }}</i></p>
+              <p class="card-text mt-3">{{ msg.content|linkify|safe }}</p>
+              <br><h class="card-subtitle text-info"><i class="fa fa-user" aria-hidden="true"></i><a style="color:#727271;" href="https://python-madrid-learn.slack.com/team/{{ msg.username }}" target="_blank"> {{ msg.username }}</a></h><br>
+              <h class="card-text  mt-3"><i class="text-info fa fa-slack" aria-hidden="true"></i><a style="color:#727271;" href="https://python-madrid-learn.slack.com/messages/{{ msg.channel_id }}" target="_blank"><i> {{ msg.channel }}</i></a></h><br><br>
               <h class="card-subtitle text-muted" style="color:#aaa; font-size: 13px;">‏
-              <i class="fa fa-clock-o" aria-hidden="true"> {{ msg.timestamp }}</i></h>
+              <i class="fa fa-clock-o" aria-hidden="true"><i> {{ msg.timestamp }}</i></i></h>
             </div>
           </div>
         </div> {% endfor %} </div>

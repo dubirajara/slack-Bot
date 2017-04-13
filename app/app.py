@@ -1,8 +1,9 @@
 import datetime
-from slackclient import SlackClient
 from flask import Flask, render_template, request, Response
-from config import Config
 from sqlalchemy import desc
+from slackclient import SlackClient
+from config import Config
+import bleach
 from models import db, Slack
 
 
@@ -26,6 +27,11 @@ def send_message(channel_id, message):
     )
 
 
+@app.template_filter('linkify')
+def linkify(link):
+    return bleach.linkify(link)
+
+
 @app.route('/')
 def home():
     msgs = Slack.query.order_by(desc(Slack.timestamp)).all()
@@ -46,7 +52,7 @@ def outgoing_msg():
 
         msg = "_Hola {} ! Gracias por compartirlo. " \
         "Puedes visualizar tus aportes y de los demás en:_ " \
-        "https://your_url.com/".format(username)
+        "https://pythonmadrid.herokuapp.com/".format(username)
 
         send_message(channel_id, msg)
 
@@ -54,6 +60,7 @@ def outgoing_msg():
             username=username,
             content=text,
             channel=channel_name,
+            channel_id=channel_id,
             timestamp=timestamp)
 
         db.session.add(slack_msg)

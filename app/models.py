@@ -10,13 +10,15 @@ class Slack(db.Model):
     username = db.Column(db.String(100), index=True)
     content = db.Column(db.String(500), index=True)
     channel = db.Column(db.String(100), index=True)
+    channel_id = db.Column(db.String(100), index=True)
     timestamp = db.Column(db.String(100), index=True)
     created = db.Column(db.DateTime, default=datetime.datetime.utcnow)
 
-    def __init__(self, username, content, channel, timestamp):
+    def __init__(self, username, content, channel, channel_id, timestamp):
         self.username = username
         self.content = content
         self.channel = channel
+        self.channel_id = channel_id
         self.timestamp = timestamp
 
     def __repr__(self):
