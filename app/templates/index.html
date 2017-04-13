@@ -13,7 +13,7 @@
 <body>
   <nav class="navbar navbar-expand-md navbar-light" style="background-color: #333;">
     <div class="container">
-      <a class="navbar-brand" style="color:#aaa;" href="#"><img src="http://i67.tinypic.com/11tocn6.png">Python Madrid Learn</a> <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+      <a class="navbar-brand" style="color:#aaa;" href="#"><img src="http://i67.tinypic.com/11tocn6.png">Python Madrid Learn</a> <button class="navbar-toggler navbar-inverse navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
         aria-label="Toggle navigation">
                   <span class="navbar-toggler-icon"></span>
                </button>
@@ -44,7 +44,7 @@
           <h4 class="mb-4 text-info text-uppercase text-center">Apuntes/Enlaces<b> compartidos</b> por la <b>comunidad</b> desde <a href="https://python-madrid-learn.slack.com" target="_blank"><i class="fa fa-slack text-info" aria-hidden="true"> slack:</i></a></h4><br> <br></div>
       </div>
       <div class="row"> {% for msg in msgs[0:] %}
-        <div class="col-md-4">
+        <div class="col-md-4" style="word-wrap: break-word;">
           <div class="card my-2">
             <div class="card-block">
               <p class="card-text  mt-3">{{ msg.content }}</p>
