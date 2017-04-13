@@ -1,3 +1,4 @@
+import datetime
 from flask_sqlalchemy import SQLAlchemy
 
 
@@ -10,6 +11,7 @@ class Slack(db.Model):
     content = db.Column(db.String(500), index=True)
     channel = db.Column(db.String(100), index=True)
     timestamp = db.Column(db.String(100), index=True)
+    created = db.Column(db.DateTime, default=datetime.datetime.utcnow)
 
     def __init__(self, username, content, channel, timestamp):
         self.username = username

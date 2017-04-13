@@ -1,12 +1,15 @@
 import datetime
 from slackclient import SlackClient
 from flask import Flask, render_template, request, Response
-from config import DevConfig, Config
+from config import Config
+from sqlalchemy import desc
 from models import db, Slack
 
 
 app = Flask(__name__)
-app.config.from_object(DevConfig)
+db.init_app(app)
+db.app = app
+app.config.from_object(Config)
 
 
 config = Config()
@@ -25,7 +28,7 @@ def send_message(channel_id, message):
 
 @app.route('/')
 def home():
-    msgs = Slack.query.all()
+    msgs = Slack.query.order_by(desc(Slack.timestamp)).all()
     return render_template('index.html', msgs=msgs)
 
 
@@ -41,17 +44,9 @@ def outgoing_msg():
         text = request.form.get('text').replace(':', '', 1).replace('|', ' ', 1)
         text = text.replace('>', '', 1).replace('<', '', 1)
 
-        inbound_message = "{} {} in {} says: {}".format(
-                timestamp,
-                username,
-                channel_name,
-                text
-                 )
-        print(inbound_message)
-
         msg = "_Hola {} ! Gracias por compartirlo. " \
         "Puedes visualizar tus aportes y de los demás en:_ " \
-        "https://xxxxxxxxx".format(username)
+        "https://your_url.com/".format(username)
 
         send_message(channel_id, msg)
 
@@ -66,11 +61,5 @@ def outgoing_msg():
 
     return Response(), 200
 
-
 if __name__ == "__main__":
-    db.init_app(app)
-
-    with app.app_context():
-        db.create_all()
-
-    app.run(port=8000)
+    app.run()

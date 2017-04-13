@@ -1,0 +1,5 @@
+Flask==0.12.1
+Flask-SQLAlchemy==2.2
+psycopg2==2.7.1
+gunicorn==19.6.0
+slackclient==1.0.5
