@@ -38,7 +38,7 @@ def home():
     return render_template('index.html', msgs=msgs)
 
 
-@app.route('/slack', methods=['POST'])
+@app.route('/api/slackbot', methods=['POST'])
 def outgoing_msg():
     if request.form.get('token') == config.SLACK_WEBHOOK_SECRET:
         channel_name = request.form.get('channel_name')
@@ -47,12 +47,12 @@ def outgoing_msg():
         time = request.form.get('timestamp')
         timestamp = datetime.datetime.fromtimestamp(
             int(float(time))).strftime('%d-%m-%Y %H:%M:%S')
-        text = request.form.get('text').replace(':', '', 1).replace('|', ' ', 1)
+        text = request.form.get('text').replace(':', '', 1)
         text = text.replace('>', '', 1).replace('<', '', 1)
 
         msg = "_Hola {} ! Gracias por compartirlo. " \
         "Puedes visualizar tus aportes y de los demás en:_ " \
-        "https://pythonmadrid.herokuapp.com/".format(username)
+        "https://your-url.com/".format(username)
 
         send_message(channel_id, msg)
 
