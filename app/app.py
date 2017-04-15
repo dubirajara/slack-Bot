@@ -17,6 +17,9 @@ config = Config()
 slack_client = SlackClient(config.SLACK_TOKEN)
 
 
+# function to send messegae in slack by userbot:
+
+
 def send_message(channel_id, message):
     slack_client.api_call(
         "chat.postMessage",
@@ -25,6 +28,8 @@ def send_message(channel_id, message):
         text=message,
 
     )
+
+# custom template tag to convert urls in urls likabled:
 
 
 @app.template_filter('linkify')
@@ -36,6 +41,9 @@ def linkify(link):
 def home():
     msgs = Slack.query.order_by(desc(Slack.timestamp)).all()
     return render_template('index.html', msgs=msgs)
+
+
+# function to get slack messages using outgoing webhook:
 
 
 @app.route('/api/slackbot', methods=['POST'])
@@ -50,6 +58,16 @@ def outgoing_msg():
         text = request.form.get('text').replace(':', '', 1)
         text = text.replace('>', '', 1).replace('<', '', 1)
 
+        ''' Enable this block comment to debug and show in terminal the retrieve data:
+         inbound_message = "{} {} in {} says: {}".format(
+                 timestamp,
+                 username,
+                 channel_name,
+                 text
+                  )
+         print(inbound_message)'''
+
+        # if get outgoing webhook response ok, userbot reply with this message:
         msg = "_Hola {} ! Gracias por compartirlo. " \
         "Puedes visualizar tus aportes y de los demás en:_ " \
         "https://your-url.com/".format(username)
@@ -62,6 +80,8 @@ def outgoing_msg():
             channel=channel_name,
             channel_id=channel_id,
             timestamp=timestamp)
+
+        # save in DB outgoing webhook messages:
 
         db.session.add(slack_msg)
         db.session.commit()
