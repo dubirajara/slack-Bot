@@ -58,8 +58,8 @@ def outgoing_msg():
         text = request.form.get('text').replace(':', '', 1)
         text = text.replace('>', '', 1).replace('<', '', 1)
 
-        ''' Enable this block comment to debug and show in terminal the retrieve data:
-         inbound_message = "{} {} in {} says: {}".format(
+        # Enable this block comment to debug and show in terminal the retrieve data:
+        ''' inbound_message = "{} {} in {} says: {}".format(
                  timestamp,
                  username,
                  channel_name,
