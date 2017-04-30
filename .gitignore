@@ -53,6 +53,7 @@ coverage.xml
 instance/
 .webassets-cache
 .DS_Store
+.vscode
 
 
 # PyBuilder

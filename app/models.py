@@ -8,7 +8,7 @@ db = SQLAlchemy()
 class Slack(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(100), index=True)
-    content = db.Column(db.String(500), index=True)
+    content = db.Column(db.Text, index=True)
     channel = db.Column(db.String(100), index=True)
     channel_id = db.Column(db.String(100), index=True)
     timestamp = db.Column(db.String(100), index=True)
