@@ -57,14 +57,14 @@ def outgoing_msg():
         text = request.form.get('text').replace(':', '', 1)
         text = text.replace('>', '', 1).replace('<', '', 1)
 
-        # Enable this block comment to debug and show in terminal the retrieve data:
-        ''' inbound_message = "{} {} in {} says: {}".format(
-                 timestamp,
-                 username,
-                 channel_name,
-                 text
-                  )
-         print(inbound_message)'''
+        # Enable this block to debug and show in terminal the retrieve data:
+        # inbound_message = "{} {} in {} says: {}".format(
+        #        timestamp,
+        #        username,
+        #        channel_name,
+        #        text
+        #         )
+        # print(inbound_message)
 
         # if get outgoing webhook response ok, userbot reply with this message:
         msg = "_Hola {} ! Gracias por compartirlo. " \
