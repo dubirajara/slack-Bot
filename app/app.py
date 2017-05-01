@@ -6,12 +6,10 @@ from config import Config
 import bleach
 from models import db, Slack
 
-
 app = Flask(__name__)
 db.init_app(app)
 db.app = app
 app.config.from_object(Config)
-
 
 config = Config()
 slack_client = SlackClient(config.SLACK_TOKEN)
@@ -28,6 +26,7 @@ def send_message(channel_id, message):
         text=message,
 
     )
+
 
 # custom template tag to convert urls in urls likabled:
 
@@ -69,8 +68,8 @@ def outgoing_msg():
 
         # if get outgoing webhook response ok, userbot reply with this message:
         msg = "_Hola {} ! Gracias por compartirlo. " \
-        "Puedes visualizar tus aportes y de los demás en:_ " \
-        "https://your-url.com/".format(username)
+              "Puedes consultar tus aportes y de los demás en:_ " \
+              "https://your-url.com/".format(username)
 
         send_message(channel_id, msg)
 
@@ -87,6 +86,7 @@ def outgoing_msg():
         db.session.commit()
 
     return Response(), 200
+
 
 if __name__ == "__main__":
     app.run(port=5000)
