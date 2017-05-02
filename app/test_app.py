@@ -18,7 +18,7 @@ class FlaskAppTestCase(unittest.TestCase):
         self.assertEqual(self.api.status_code, 200)
 
     def test_index_context(self):
-        self.assertTrue(b'python <b>madrid</b> learn</h3>' in self.index.data)
+        self.assertIn(b'python <b>madrid</b> learn</h3>', self.index.data)
 
     def test_get_api(self):
         api_get = self.client.get('/api/slackbot')
