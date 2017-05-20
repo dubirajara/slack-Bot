@@ -54,7 +54,7 @@ def outgoing_msg():
         time = request.form.get('timestamp')
         timestamp = datetime.datetime.fromtimestamp(
             int(float(time))).strftime('%d-%m-%Y %H:%M:%S')
-        text = request.form.get('text').replace('::', '', 1)
+        text = request.form.get('text').strip(': ')
         text = text.replace('>', '', 1).replace('<', '', 1)
 
         # Enable this block to debug and show in terminal the retrieve data:
