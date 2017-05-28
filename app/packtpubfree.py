@@ -31,7 +31,6 @@ def send_message(message):
         channel='Chanel ID',
         as_user="true:",
         text=message,
-
     )
 
 
