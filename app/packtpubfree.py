@@ -6,7 +6,7 @@ from slackclient import SlackClient
 
 
 '''
-Script to send a messagen in slack if daily packtpub free book is about python.
+Script to send a message in slack if daily packtpub free book is about python.
 '''
 
 url = 'https://www.packtpub.com/packt/offers/free-learning'
@@ -22,7 +22,7 @@ header['Upgrade-Insecure-Requests'] = '1'
 r = requests.get(url, headers=header)
 soup = BeautifulSoup(r.text, 'lxml')
 
-slack_client = SlackClient(os.environ.get('SLACK_TOKEN_TEST'))
+slack_client = SlackClient(os.environ.get('SLACK_TOKEN'))
 
 
 def send_message(message):
@@ -35,7 +35,7 @@ def send_message(message):
     )
 
 
-def get_packpub():
+def get_packtpub():
     div = soup.find('div', class_='dotd-main-book-summary float-left')
     patterns = 'Python | Django | Flask'
     words = div.find_all(text=re.compile(patterns))
@@ -48,4 +48,5 @@ def get_packpub():
         send_message(msg)
 
 
-get_packpub()
+if __name__ == "__main__":
+    get_packtpub()
