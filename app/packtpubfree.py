@@ -1,6 +1,6 @@
 import os
 import re
-from datetime import datetime
+import time
 from bs4 import BeautifulSoup
 import requests
 from slackclient import SlackClient
@@ -42,7 +42,7 @@ def get_packtpub():
 
     if words:
         title = soup.h2.get_text().strip()
-        today = datetime.now().strftime("%d/%m")
+        today = time.strftime("%d/%m")
 
         msg = "_Libro gratis solo hoy({}):_ *{}*: {}".format(today, title, url)
 
