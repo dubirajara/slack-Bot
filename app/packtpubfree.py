@@ -42,9 +42,9 @@ def get_packtpub():
 
     if words:
         title = soup.h2.get_text().strip()
-        today = time.strftime("%d/%m")
+        day = time.strftime("%d/%m")
 
-        msg = "_Libro gratis solo hoy({}):_ *{}*: {}".format(today, title, url)
+        msg = "_Libro gratis solo hoy ({}):_ *{}*: {}".format(day, title, url)
 
         send_message(msg)
 
