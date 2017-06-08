@@ -38,7 +38,7 @@ def linkify(link):
 
 @app.route('/')
 def home():
-    msgs = Slack.query.order_by(desc(Slack.timestamp)).all()
+    msgs = Slack.query.order_by(desc(Slack.created)).all()
     return render_template('index.html', msgs=msgs)
 
 
