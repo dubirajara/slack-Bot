@@ -37,7 +37,7 @@ def send_message(message):
 
 def get_packtpub():
     div = soup.find('div', class_='dotd-main-book-summary float-left')
-    patterns = 'Python|Django|Flask'
+    patterns = 'Python|Django|Flask|scikit-learn'
     words = div.find_all(text=re.compile(patterns))
 
     if words:
