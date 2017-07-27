@@ -15,10 +15,8 @@ config = Config()
 slack_client = SlackClient(config.SLACK_TOKEN)
 
 
-# function to send messegae in slack by userbot:
-
-
 def send_message(channel_id, message):
+    '''Send messegae in slack by userbot'''
     slack_client.api_call(
         "chat.postMessage",
         channel=channel_id,
@@ -28,25 +26,23 @@ def send_message(channel_id, message):
     )
 
 
-# custom template tag to convert urls in urls likabled:
-
-
 @app.template_filter('linkify')
 def linkify(link):
+    '''custom template tag to convert urls in urls likabled'''
     return bleach.linkify(link)
 
 
 @app.route('/')
 def home():
+    '''retrieve msgs and render in home'''
     msgs = Slack.query.order_by(desc(Slack.created)).all()
     return render_template('index.html', msgs=msgs)
 
 
-# function to get slack messages using outgoing webhook:
-
 
 @app.route('/api/slackbot', methods=['POST'])
 def outgoing_msg():
+    '''function to get slack messages using outgoing webhook'''
     if request.form.get('token') == config.SLACK_WEBHOOK_SECRET:
         channel_name = request.form.get('channel_name')
         channel_id = request.form.get('channel_id')
