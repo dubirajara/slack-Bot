@@ -16,7 +16,7 @@ slack_client = SlackClient(config.SLACK_TOKEN)
 
 
 def send_message(channel_id, message):
-    '''Send messegae in slack by userbot'''
+    '''call api to send message in slack by userbot'''
     slack_client.api_call(
         "chat.postMessage",
         channel=channel_id,
@@ -37,7 +37,6 @@ def home():
     '''retrieve msgs and render in home'''
     msgs = Slack.query.order_by(desc(Slack.created)).all()
     return render_template('index.html', msgs=msgs)
-
 
 
 @app.route('/api/slackbot', methods=['POST'])
@@ -63,9 +62,9 @@ def outgoing_msg():
         # print(inbound_message)
 
         # if get outgoing webhook response ok, userbot reply with this message:
-        msg = "_Hola {} ! Gracias por compartirlo. " \
+        msg = f"_Hola {username} ! Gracias por compartirlo. " \
               "Puedes consultar tus aportes y de los demás en:_ " \
-              "https://your-url.com/".format(username)
+              "https://your-url.com/"
 
         send_message(channel_id, msg)
 
