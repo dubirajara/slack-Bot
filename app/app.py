@@ -1,5 +1,5 @@
 import datetime
-from flask import Flask, render_template, request, Response
+from flask import Flask, render_template, request, Response, jsonify, abort
 from sqlalchemy import desc
 from slackclient import SlackClient
 from config import Config
@@ -10,6 +10,7 @@ app = Flask(__name__)
 db.init_app(app)
 db.app = app
 app.config.from_object(Config)
+app.config['JSON_AS_ASCII'] = False
 
 config = Config()
 slack_client = SlackClient(config.SLACK_TOKEN)
@@ -39,9 +40,48 @@ def home():
     return render_template('index.html', msgs=msgs)
 
 
+@app.route('/api/list/', methods=['GET'])
+def api_list():
+    '''api to retrieve all msgs json serializer'''
+    messages = []
+    for message in Slack.query.order_by(desc(Slack.timestamp)).all():
+        messages.append({
+            'id': message.id,
+            'username': message.username,
+            'content': message.content,
+            'channel': message.channel,
+            'channel_id': message.channel_id,
+            'timestamp': message.timestamp,
+            'created': message.created
+        })
+    response = jsonify(messages)
+    return response
+
+
+@app.route('/api/list/<int:id>/', methods=['GET'])
+def api_id(id):
+    '''api to retrieve a msg per id json serializer'''
+    message = Slack.query.filter_by(id=id).first()
+    if message:
+        response = jsonify({
+            'id': message.id,
+            'username': message.username,
+            'content': message.content,
+            'channel': message.channel,
+            'channel_id': message.channel_id,
+            'timestamp': message.timestamp,
+            'created': message.created
+        })
+
+        return response
+
+    else:
+        abort(404)
+
+
 @app.route('/api/slackbot', methods=['POST'])
 def outgoing_msg():
-    '''function to get slack messages using outgoing webhook'''
+    '''get slack messages using outgoing webhook'''
     if request.form.get('token') == config.SLACK_WEBHOOK_SECRET:
         channel_name = request.form.get('channel_name')
         channel_id = request.form.get('channel_id')
