@@ -8,6 +8,7 @@ class Config(object):
     SLACK_TOKEN = os.environ.get('SLACK_TOKEN')
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    JSON_AS_ASCII = False
 
 
 class DevConfig(Config):

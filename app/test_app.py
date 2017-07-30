@@ -1,39 +1,18 @@
 # coding: utf-8
-import json
 from app import app
-from models import db, Slack
 import unittest
 
 
 class FlaskAppTestCase(unittest.TestCase):
-
-
     def setUp(self):
         self.client = app.test_client()
-        db.create_all()
-        self.content = Slack(
-            username='testuser',
-            content='hello word, this is a test',
-            channel='SlackTest',
-            channel_id='TEST123',
-            timestamp=122344557
-        )
-        db.session.add(self.content)
-        db.session.commit()
         self.index = self.client.get('/')
-        self.api = self.client.post('/api/slackbot')
-
-    def tearDown(self):
-        db.session.remove()
-        db.drop_all()
-
-    def test_get_user(self):
-        self.assertEqual(self.content.username, 'testuser')
 
     def test_get_index(self):
         self.assertEqual(self.index.status_code, 200)
 
     def test_post_api(self):
+        self.api = self.client.post('/api/slackbot')
         self.assertEqual(self.api.status_code, 200)
 
     def test_index_context(self):
@@ -49,6 +28,14 @@ class FlaskAppTestCase(unittest.TestCase):
 
     def test_content_type_index(self):
         self.assertIn('text/html', self.index.headers['Content-Type'])
+
+    def test_get_api_list(self):
+        api_get = self.client.get('/api/list/')
+        self.assertEqual(api_get.status_code, 200)
+
+    def test_get_api_list_id_not_found(self):
+        api_get = self.client.get('/api/list/1/')
+        self.assertEqual(api_get.status_code, 404)
 
 
 if __name__ == '__main__':

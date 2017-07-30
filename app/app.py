@@ -7,10 +7,8 @@ import bleach
 from models import db, Slack
 
 app = Flask(__name__)
-db.init_app(app)
-db.app = app
 app.config.from_object(Config)
-app.config['JSON_AS_ASCII'] = False
+db.init_app(app)
 
 config = Config()
 slack_client = SlackClient(config.SLACK_TOKEN)
