@@ -27,7 +27,7 @@ def send_message(channel_id, message):
 
 @app.template_filter('linkify')
 def linkify(link):
-    '''custom template tag to convert urls in urls likabled'''
+    '''custom template tag to convert urls in clickable links'''
     return bleach.linkify(link)
 
 
