@@ -1,5 +1,5 @@
 beautifulsoup4==4.6.0
-bleach==2.1
+bleach==2.1.1
 Flask==0.12.2
 Flask-SQLAlchemy==2.3.0
 gunicorn==19.7.1
