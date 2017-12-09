@@ -6,6 +6,7 @@ from config import Config
 import bleach
 from models import db, Slack
 
+
 app = Flask(__name__)
 app.config.from_object(Config)
 db.init_app(app)
@@ -32,10 +33,23 @@ def linkify(link):
 
 
 @app.route('/')
-def home():
-    '''retrieve msgs and render in home'''
-    msgs = Slack.query.order_by(desc(Slack.created)).all()
+@app.route('/<int:page>')
+def home(page=1):
+    msgs = Slack.query.order_by(
+        desc(Slack.timestamp)).paginate(page, config.POSTS_PER_PAGE, False)
     return render_template('index.html', msgs=msgs)
+
+
+@app.route('/user/<path:username>/')
+def user(username, page=1):
+    msgs = Slack.query.filter_by(username=username)
+    return render_template('user.html', msgs=msgs)
+
+
+@app.route('/channel/<path:channel>/')
+def channel(channel):
+    msgs = Slack.query.filter_by(channel=channel)
+    return render_template('user.html', msgs=msgs)
 
 
 @app.route('/api/list/', methods=['GET'])
@@ -77,6 +91,40 @@ def api_id(id):
         abort(404)
 
 
+@app.route('/api/list/<username>/', methods=['GET'])
+def api_username(username):
+    messages = []
+    for message in Slack.query.filter_by(username=username):
+        messages.append({
+            'id': message.id,
+            'username': message.username,
+            'content': message.content,
+            'channel': message.channel,
+            'channel_id': message.channel_id,
+            'timestamp': message.timestamp,
+            'created': message.created
+        })
+    response = jsonify(messages)
+    return response
+
+
+@app.route('/api/list/channel/<path:channel>/', methods=['GET'])
+def api_channel(channel):
+    messages = []
+    for message in Slack.query.filter_by(channel=channel):
+        messages.append({
+            'id': message.id,
+            'username': message.username,
+            'content': message.content,
+            'channel': message.channel,
+            'channel_id': message.channel_id,
+            'timestamp': message.timestamp,
+            'created': message.created
+        })
+    response = jsonify(messages)
+    return response
+
+
 @app.route('/api/slackbot', methods=['POST'])
 def outgoing_msg():
     '''get slack messages using outgoing webhook'''
@@ -90,19 +138,9 @@ def outgoing_msg():
         text = request.form.get('text').strip(': ')
         text = text.replace('>', '', 1).replace('<', '', 1)
 
-        # Enable this block to debug and show in terminal the retrieve data:
-        # inbound_message = "{} {} in {} says: {}".format(
-        #        timestamp,
-        #        username,
-        #        channel_name,
-        #        text
-        #         )
-        # print(inbound_message)
-
-        # if get outgoing webhook response ok, userbot reply with this message:
         msg = f"_Hola {username} ! Gracias por compartirlo. " \
-              "Puedes consultar tus aportes y de los demás en:_ " \
-              "https://your-url.com/"
+            "Puedes consultar tus aportes y de los demás en:_ " \
+            "https://pythonmadrid.herokuapp.com/"
 
         send_message(channel_id, msg)
 
@@ -113,13 +151,10 @@ def outgoing_msg():
             channel_id=channel_id,
             timestamp=timestamp)
 
-        # save in DB outgoing webhook messages:
-
         db.session.add(slack_msg)
         db.session.commit()
 
     return Response(), 200
 
-
 if __name__ == "__main__":
-    app.run(port=5000)
+    app.run()
