@@ -4,8 +4,8 @@
 {% block content %}
 
 
-      {% if msgs.items %}
-      <div class="row"> {% for msg in msgs.items %}
+{% if msgs %}
+      <div class="row"> {% for msg in msgs %}
         <div class="col-md-4" style="word-wrap: break-word;">
           <div class="card my-2">
             <div class="card-block">
@@ -17,18 +17,6 @@
             </div>
           </div>
         </div> {% endfor %} </div>
-<br>
-  <ul class="pagination justify-content-center">
-    <li class="page-item">
-      {% if msgs.has_prev %}
-      <a class="page-link" href="{{ url_for('home', page=msgs.prev_num) }}">Previous</a>
-{% endif %}
-    <li class="page-item">
-      {% if msgs.has_next %}
-      <a class="page-link" href="{{ url_for('home', page=msgs.next_num) }}">Next</a>
-      {% endif %}
-    </li>
-  </ul>
      {% else %}
               <h3 style="text-align:center">No hay resultados!</h3>
       {% endif %}
