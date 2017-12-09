@@ -1,7 +1,6 @@
 # coding: utf-8
-import unittest
-
 from app import app
+import unittest
 
 
 class FlaskAppTestCase(unittest.TestCase):
@@ -34,9 +33,9 @@ class FlaskAppTestCase(unittest.TestCase):
         api_get = self.client.get('/api/list/')
         self.assertEqual(api_get.status_code, 200)
 
-    def test_get_api_list_id_not_found(self):
-        api_get = self.client.get('/api/list/1/')
-        self.assertEqual(api_get.status_code, 404)
+    def test_get_api_list_id(self):
+        api_get = self.client.get('/api/list/200/')
+        self.assertEqual(api_get.status_code, 200)
 
 
 if __name__ == '__main__':
