@@ -33,20 +33,20 @@ def linkify(link):
 
 
 @app.route('/')
-@app.route('/<int:page>')
+@app.route('/<int:page>', methods=['GET'])
 def home(page=1):
     msgs = Slack.query.order_by(
         desc(Slack.timestamp)).paginate(page, config.POSTS_PER_PAGE, False)
     return render_template('index.html', msgs=msgs)
 
 
-@app.route('/user/<path:username>/')
+@app.route('/user/<path:username>/', methods=['GET'])
 def user(username, page=1):
     msgs = Slack.query.filter_by(username=username)
     return render_template('user.html', msgs=msgs)
 
 
-@app.route('/channel/<path:channel>/')
+@app.route('/channel/<path:channel>/', methods=['GET'])
 def channel(channel):
     msgs = Slack.query.filter_by(channel=channel)
     return render_template('user.html', msgs=msgs)
@@ -91,7 +91,7 @@ def api_id(id):
         abort(404)
 
 
-@app.route('/api/list/<username>/', methods=['GET'])
+@app.route('/api/list/<path:username>/', methods=['GET'])
 def api_username(username):
     messages = []
     for message in Slack.query.filter_by(username=username):
