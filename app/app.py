@@ -36,19 +36,21 @@ def linkify(link):
 @app.route('/<int:page>', methods=['GET'])
 def home(page=1):
     msgs = Slack.query.order_by(
-        desc(Slack.timestamp)).paginate(page, config.POSTS_PER_PAGE, False)
+        Slack.created.desc()).paginate(page, config.POSTS_PER_PAGE, False)
     return render_template('index.html', msgs=msgs)
 
 
 @app.route('/user/<path:username>/', methods=['GET'])
 def user(username, page=1):
-    msgs = Slack.query.filter_by(username=username)
+    msgs = Slack.query.filter_by(username=username).order_by(
+        Slack.created.desc())
     return render_template('user.html', msgs=msgs)
 
 
 @app.route('/channel/<path:channel>/', methods=['GET'])
 def channel(channel):
-    msgs = Slack.query.filter_by(channel=channel)
+    msgs = Slack.query.filter_by(channel=channel).order_by(
+        Slack.created.desc())
     return render_template('user.html', msgs=msgs)
 
 
@@ -56,7 +58,7 @@ def channel(channel):
 def api_list():
     '''api to retrieve all msgs json serializer'''
     messages = []
-    for message in Slack.query.order_by(desc(Slack.timestamp)).all():
+    for message in Slack.query.order_by(Slack.created.desc()).all():
         messages.append({
             'id': message.id,
             'username': message.username,
@@ -134,7 +136,7 @@ def outgoing_msg():
         username = request.form.get('user_name')
         time = request.form.get('timestamp')
         timestamp = datetime.datetime.fromtimestamp(
-            int(float(time))).strftime('%d-%m-%Y %H:%M:%S')
+            int(float(time))).strftime('%d/%m/%Y %H:%M:%S')
         text = request.form.get('text').strip(': ')
         text = text.replace('>', '', 1).replace('<', '', 1)
 
