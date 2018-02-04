@@ -5,4 +5,4 @@ install:
     - pip install -q -r requirements.txt
 
 script:
-    - python -m unittest test_app.py
+    - python -m unittest app/test_app.py
