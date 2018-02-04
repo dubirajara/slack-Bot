@@ -1,8 +1,0 @@
-language: python
-python:
-      - 3.6
-install: 
-    - pip install -q -r requirements.txt
-
-script:
-    - python -m unittest app/test_app.py
