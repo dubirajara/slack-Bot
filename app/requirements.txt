@@ -4,5 +4,5 @@ Flask==0.12.2
 Flask-SQLAlchemy==2.3.2
 gunicorn==19.7.1
 lxml==4.1.1
-psycopg2==2.7.3.2
+psycopg2==2.7.4
 slackclient==1.1.2
