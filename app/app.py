@@ -35,6 +35,7 @@ def linkify(link):
 @app.route('/')
 @app.route('/<int:page>', methods=['GET'])
 def home(page=1):
+    '''retrieve all msgs and render in home'''
     msgs = Slack.query.order_by(
         Slack.created.desc()).paginate(page, config.POSTS_PER_PAGE, False)
     return render_template('index.html', msgs=msgs)
@@ -42,6 +43,7 @@ def home(page=1):
 
 @app.route('/user/<path:username>/', methods=['GET'])
 def user(username, page=1):
+    '''retrieve all msgs per user'''
     msgs = Slack.query.filter_by(username=username).order_by(
         Slack.created.desc())
     return render_template('user.html', msgs=msgs)
@@ -49,6 +51,7 @@ def user(username, page=1):
 
 @app.route('/channel/<path:channel>/', methods=['GET'])
 def channel(channel):
+    '''retrieve all msgs per channel'''
     msgs = Slack.query.filter_by(channel=channel).order_by(
         Slack.created.desc())
     return render_template('user.html', msgs=msgs)
@@ -95,6 +98,7 @@ def api_id(id):
 
 @app.route('/api/list/<path:username>/', methods=['GET'])
 def api_username(username):
+    '''api to retrieve a msg per username json serializer'''
     messages = []
     for message in Slack.query.filter_by(username=username):
         messages.append({
@@ -112,6 +116,7 @@ def api_username(username):
 
 @app.route('/api/list/channel/<path:channel>/', methods=['GET'])
 def api_channel(channel):
+    '''api to retrieve a msg per channel json serializer'''
     messages = []
     for message in Slack.query.filter_by(channel=channel):
         messages.append({
@@ -140,9 +145,19 @@ def outgoing_msg():
         text = request.form.get('text').strip(': ')
         text = text.replace('>', '', 1).replace('<', '', 1)
 
+        # Enable this block to debug and show in terminal the retrieve data:
+        # inbound_message = "{} {} in {} says: {}".format(
+        #        timestamp,
+        #        username,
+        #        channel_name,
+        #        text
+        #         )
+        # print(inbound_message)
+
+        # if get outgoing webhook response ok, userbot reply with this message:
         msg = f"_Hola {username} ! Gracias por compartirlo. " \
-            "Puedes consultar tus aportes y de los demás en:_ " \
-            "https://pythonmadrid.herokuapp.com/"
+              "Puedes consultar tus aportes y de los demás en:_ " \
+              "https://your-url.com/"
 
         send_message(channel_id, msg)
 
