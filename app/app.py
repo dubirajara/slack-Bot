@@ -96,7 +96,7 @@ def api_id(id):
         abort(404)
 
 
-@app.route('/api/list/<path:username>/', methods=['GET'])
+@app.route('/api/list/user/<path:username>/', methods=['GET'])
 def api_username(username):
     '''api to retrieve a msg per username json serializer'''
     messages = []
@@ -110,8 +110,12 @@ def api_username(username):
             'timestamp': message.timestamp,
             'created': message.created
         })
-    response = jsonify(messages)
-    return response
+    if messages:
+        response = jsonify(messages)
+        return response
+
+    else:
+        abort(404)
 
 
 @app.route('/api/list/channel/<path:channel>/', methods=['GET'])
@@ -128,8 +132,12 @@ def api_channel(channel):
             'timestamp': message.timestamp,
             'created': message.created
         })
-    response = jsonify(messages)
-    return response
+    if messages:
+        response = jsonify(messages)
+        return response
+
+    else:
+        abort(404)
 
 
 @app.route('/api/slackbot', methods=['POST'])
