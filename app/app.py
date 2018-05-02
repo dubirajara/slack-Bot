@@ -72,13 +72,8 @@ def outgoing_msg():
         text = request.form.get('text').strip(': ')
         text = text.replace('>', '', 1).replace('<', '', 1)
 
-        # Enable this block to debug and show in terminal the retrieve data:
-        # inbound_message = "{} {} in {} says: {}".format(
-        #        timestamp,
-        #        username,
-        #        channel_name,
-        #        text
-        #         )
+        # uncomment this block if you want to debug and show in console the retrieve data:
+        # inbound_message = f"{timestamp} {username} in {channel_name} says: {text}"
         # print(inbound_message)
 
         # if get outgoing webhook response ok, userbot reply with this message:
