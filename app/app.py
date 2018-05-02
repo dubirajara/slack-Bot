@@ -1,13 +1,15 @@
 import datetime
-from flask import Flask, render_template, request, Response, jsonify, abort
+from flask import Flask, render_template, request, Response
 from sqlalchemy import desc
 from slackclient import SlackClient
-from config import Config
 import bleach
-from models import db, Slack
 
+from app.models import db, Slack
+from app.api.api import api
+from config import Config
 
 app = Flask(__name__)
+app.register_blueprint(api)
 app.config.from_object(Config)
 db.init_app(app)
 
@@ -57,89 +59,6 @@ def channel(channel):
     return render_template('user.html', msgs=msgs)
 
 
-@app.route('/api/list/', methods=['GET'])
-def api_list():
-    '''api to retrieve all msgs json serializer'''
-    messages = []
-    for message in Slack.query.order_by(Slack.created.desc()).all():
-        messages.append({
-            'id': message.id,
-            'username': message.username,
-            'content': message.content,
-            'channel': message.channel,
-            'channel_id': message.channel_id,
-            'timestamp': message.timestamp,
-            'created': message.created
-        })
-    response = jsonify(messages)
-    return response
-
-
-@app.route('/api/list/<int:id>/', methods=['GET'])
-def api_id(id):
-    '''api to retrieve a msg per id json serializer'''
-    message = Slack.query.filter_by(id=id).first()
-    if message:
-        response = jsonify({
-            'id': message.id,
-            'username': message.username,
-            'content': message.content,
-            'channel': message.channel,
-            'channel_id': message.channel_id,
-            'timestamp': message.timestamp,
-            'created': message.created
-        })
-
-        return response
-
-    else:
-        abort(404)
-
-
-@app.route('/api/list/user/<path:username>/', methods=['GET'])
-def api_username(username):
-    '''api to retrieve a msg per username json serializer'''
-    messages = []
-    for message in Slack.query.filter_by(username=username):
-        messages.append({
-            'id': message.id,
-            'username': message.username,
-            'content': message.content,
-            'channel': message.channel,
-            'channel_id': message.channel_id,
-            'timestamp': message.timestamp,
-            'created': message.created
-        })
-    if messages:
-        response = jsonify(messages)
-        return response
-
-    else:
-        abort(404)
-
-
-@app.route('/api/list/channel/<path:channel>/', methods=['GET'])
-def api_channel(channel):
-    '''api to retrieve a msg per channel json serializer'''
-    messages = []
-    for message in Slack.query.filter_by(channel=channel):
-        messages.append({
-            'id': message.id,
-            'username': message.username,
-            'content': message.content,
-            'channel': message.channel,
-            'channel_id': message.channel_id,
-            'timestamp': message.timestamp,
-            'created': message.created
-        })
-    if messages:
-        response = jsonify(messages)
-        return response
-
-    else:
-        abort(404)
-
-
 @app.route('/api/slackbot', methods=['POST'])
 def outgoing_msg():
     '''get slack messages using outgoing webhook'''
@@ -180,6 +99,7 @@ def outgoing_msg():
         db.session.commit()
 
     return Response(), 200
+
 
 if __name__ == "__main__":
     app.run()
