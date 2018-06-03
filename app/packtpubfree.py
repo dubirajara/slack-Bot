@@ -8,7 +8,7 @@ import twitter
 
 
 header = {'Host': 'www.packtpub.com',
-          'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:50.0) Gecko/20100101 Firefox/50.0', 
+          'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:50.0) Gecko/20100101 Firefox/50.0',
           'Accept': '*/*',
           'Accept-Language': 'en-US,en;q=0.5',
           'Accept-Encoding': 'gzip, deflate',
@@ -28,7 +28,8 @@ def get_packtpub():
         title = soup.h2.get_text().strip()
         today = time.strftime("%d/%m")
         msg = f"_Libro gratis solo hoy ({today}):_ *{title}*: {url}"
-        msg_twitter = f"Free Ebook today ({today}): {title}: http://bit.ly/PacktDailyOffer #Python #PacktPub #FreeLearning"
+        msg_twitter = f"Free Ebook today ({today}): " \
+                      f"{title}: http://bit.ly/PacktDailyOffer #Python #PacktPub #FreeLearning"
 
         send_message(msg)
         send_message_twitter(msg_twitter)
@@ -49,9 +50,9 @@ def send_message(msg):
 def send_message_twitter(msg_twitter):
     '''send a message in twitter if daily packtpub free ebook about python'''
     api = twitter.Api(consumer_key=os.environ.get('consumer_key'),
-                    consumer_secret=os.environ.get('consumer_secret'),
-                    access_token_key=os.environ.get('access_token_key'),
-                    access_token_secret=os.environ.get('access_token_secret'))
+                      consumer_secret=os.environ.get('consumer_secret'),
+                      access_token_key=os.environ.get('access_token_key'),
+                      access_token_secret=os.environ.get('access_token_secret'))
 
     api.PostUpdate(msg_twitter)
 

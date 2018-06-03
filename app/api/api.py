@@ -1,6 +1,5 @@
 from flask import Blueprint, jsonify, abort
 from sqlalchemy import desc
-
 from app.models import Slack
 
 
@@ -11,7 +10,7 @@ api = Blueprint('api', __name__, url_prefix='/api')
 def api_list():
     '''api to retrieve all msgs json serializer'''
     messages = []
-    for message in Slack.query.order_by(Slack.created.desc()).all():
+    for message in Slack.query.order_by(desc(Slack.created)).all():
         messages.append({
             'id': message.id,
             'username': message.username,

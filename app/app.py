@@ -39,23 +39,21 @@ def linkify(link):
 def home(page=1):
     '''retrieve all msgs and render in home'''
     msgs = Slack.query.order_by(
-        Slack.created.desc()).paginate(page, config.POSTS_PER_PAGE, False)
+        desc(Slack.created)).paginate(page, config.POSTS_PER_PAGE, False)
     return render_template('index.html', msgs=msgs)
 
 
 @app.route('/user/<path:username>/', methods=['GET'])
 def user(username, page=1):
     '''retrieve all msgs per user'''
-    msgs = Slack.query.filter_by(username=username).order_by(
-        Slack.created.desc())
+    msgs = Slack.query.filter_by(username=username).order_by(desc(Slack.created))
     return render_template('user.html', msgs=msgs)
 
 
 @app.route('/channel/<path:channel>/', methods=['GET'])
 def channel(channel):
     '''retrieve all msgs per channel'''
-    msgs = Slack.query.filter_by(channel=channel).order_by(
-        Slack.created.desc())
+    msgs = Slack.query.filter_by(channel=channel).order_by(desc(Slack.created))
     return render_template('user.html', msgs=msgs)
 
 
