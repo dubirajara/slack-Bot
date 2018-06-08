@@ -5,6 +5,6 @@ Flask-SQLAlchemy==2.3.2
 gunicorn==19.8.1
 lxml==4.2.1
 psycopg2==2.7.4
-python-twitter==3.4.1
+python-twitter==3.4.2
 slackclient==1.2.1
 requests==2.18.4
