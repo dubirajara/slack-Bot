@@ -7,4 +7,4 @@ lxml==4.2.2
 psycopg2==2.7.4
 python-twitter==3.4.2
 slackclient==1.2.1
-requests==2.19.0
+requests==2.19.1
