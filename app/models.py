@@ -22,4 +22,4 @@ class Slack(db.Model):
         self.timestamp = timestamp
 
     def __repr__(self):
-        return '<User %r>' % (self.username)
+        return f'<{self.__class__.__name__}, username: {self.username}>'
