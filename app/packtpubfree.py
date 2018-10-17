@@ -27,15 +27,15 @@ def get_packtpub():
     if words:
         title = soup.h2.get_text().strip()
         today = time.strftime("%d/%m")
-        msg = f"_Libro gratis solo hoy ({today}):_ *{title}*: {url}"
+        msg_slack = f"_Libro gratis solo hoy ({today}):_ *{title}*: {url}"
         msg_twitter = f"Free Ebook today ({today}): " \
                       f"{title}: http://bit.ly/PacktDailyOffer #Python #PacktPub #FreeLearning"
 
-        send_message(msg)
+        send_message_slack(msg_slack)
         send_message_twitter(msg_twitter)
 
 
-def send_message(msg):
+def send_message_slack(msg_slack):
     '''send a message in slack if daily packtpub free ebook about python'''
     slack_client = SlackClient('SLACK_TOKEN')
 
@@ -43,7 +43,7 @@ def send_message(msg):
         "chat.postMessage",
         channel='here the Chanel ID',
         as_user="true:",
-        text=msg
+        text=msg_slack
     )
 
 
