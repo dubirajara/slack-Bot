@@ -1,5 +1,6 @@
 from flask import Blueprint, jsonify, abort
 from sqlalchemy import desc
+
 from app.models import Slack
 
 

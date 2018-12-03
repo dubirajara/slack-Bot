@@ -1,6 +1,7 @@
 import os
 import re
 import time
+
 from bs4 import BeautifulSoup
 import requests
 from slackclient import SlackClient
@@ -26,25 +27,29 @@ def get_packtpub():
 
     if words:
         title = soup.h2.get_text().strip()
+        image = soup.select('div.dotd-main-book-image.float-left img')[0].get('src')
         today = time.strftime("%d/%m")
-        msg = f"_Libro gratis solo hoy ({today}):_ *{title}*: {url}"
+        msg_slack = f"_Libro gratis solo hoy ({today}):_ *{title}*: {url}"
         msg_twitter = f"Free Ebook today ({today}): " \
                       f"{title}: http://bit.ly/PacktDailyOffer #Python #PacktPub #FreeLearning"
 
-        send_message(msg)
+        send_message_slack(msg_slack, image)
         send_message_twitter(msg_twitter)
 
 
-def send_message(msg):
+def send_message_slack(msg_slack, image):
     '''send a message in slack if daily packtpub free ebook about python'''
     slack_client = SlackClient('SLACK_TOKEN')
 
     slack_client.api_call(
         "chat.postMessage",
-        channel='here the Chanel ID',
+        channel='C2DEJD2MN',
         as_user="true:",
-        text=msg
-    )
+        attachments=[{
+            "color": "#36a64f",
+            "text": msg_slack,
+            "image_url": image
+            }])
 
 
 def send_message_twitter(msg_twitter):

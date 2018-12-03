@@ -1,8 +1,9 @@
 import datetime
+
+import bleach
 from flask import Flask, render_template, request, Response
 from sqlalchemy import desc
 from slackclient import SlackClient
-import bleach
 
 from app.models import db, Slack
 from app.api.api import api
