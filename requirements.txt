@@ -3,7 +3,7 @@ bleach==3.0.2
 Flask-SQLAlchemy==2.3.2
 Flask==1.0.2
 gunicorn==19.9.0
-lxml==4.2.6
+lxml==4.3.0
 psycopg2==2.7.6.1
 python-twitter==3.5
 requests==2.21.0
