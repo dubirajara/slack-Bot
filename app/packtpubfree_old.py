@@ -3,38 +3,38 @@ import re
 import time
 
 from bs4 import BeautifulSoup
+import requests
 from slackclient import SlackClient
-from selenium import webdriver
 import twitter
+
+
+header = {'Host': 'www.packtpub.com',
+          'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:50.0) Gecko/20100101 Firefox/50.0',
+          'Accept': '*/*',
+          'Accept-Language': 'en-US,en;q=0.5',
+          'Accept-Encoding': 'gzip, deflate',
+          'Upgrade-Insecure-Requests': '1'}
 
 
 def get_packtpub():
     '''Scraping packtpub web searching daily free ebook about python'''
-    patterns = 'Python|Django|Flask|scikit-learn|pandas|API'
     url = 'https://www.packtpub.com/packt/offers/free-learning'
+    r = requests.get(url, headers=header)
+    soup = BeautifulSoup(r.text, 'lxml')
+    div = soup.find('div', class_='dotd-main-book-summary float-left')
+    patterns = 'Python|Django|Flask|scikit-learn|pandas'
+    words = div.find_all(text=re.compile(patterns))
 
-    driver = webdriver.PhantomJS()
-    driver.implicitly_wait(10)
-    driver.get(url)
-
-    text = driver.find_element_by_class_name("product__right").text
-
-    if re.search(patterns, text):
-        title = driver.find_element_by_class_name("product__title").text
-        image = driver.find_elements_by_xpath('//*[@id="free-learning-dropin"]/div[1]/div/div/div/div/div[1]/a/img')[0].get_attribute("src")
+    if words:
+        title = soup.h2.get_text().strip()
+        image = soup.select('div.dotd-main-book-image.float-left img')[0].get('src')
         today = time.strftime("%d/%m")
         msg_slack = f"_Libro gratis solo hoy ({today}):_ *{title}*: {url}"
-        print(msg_slack)
         msg_twitter = f"Free Ebook today ({today}): " \
                       f"{title}: http://bit.ly/PacktDailyOffer #Python #PacktPub #FreeLearning"
 
         send_message_slack(msg_slack, image)
         send_message_twitter(msg_twitter)
-
-    else:
-        print('Not python today')
-
-    driver.quit()
 
 
 def send_message_slack(msg_slack, image):
