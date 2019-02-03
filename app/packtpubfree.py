@@ -10,7 +10,7 @@ import twitter
 
 def get_packtpub():
     '''Scraping packtpub web searching daily free ebook about python'''
-    patterns = 'Python|Django|Flask|scikit-learn|pandas|API'
+    patterns = 'Python|Django|Flask|scikit-learn|pandas'
     url = 'https://www.packtpub.com/packt/offers/free-learning'
 
     driver = webdriver.PhantomJS()
