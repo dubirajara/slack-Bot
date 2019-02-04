@@ -2,7 +2,6 @@ import os
 import re
 import time
 
-from bs4 import BeautifulSoup
 from slackclient import SlackClient
 from selenium import webdriver
 import twitter
@@ -21,7 +20,8 @@ def get_packtpub():
 
     if re.search(patterns, text):
         title = driver.find_element_by_class_name("product__title").text
-        image = driver.find_elements_by_xpath('//*[@id="free-learning-dropin"]/div[1]/div/div/div/div/div[1]/a/img')[0].get_attribute("src")
+        image = driver.find_elements_by_xpath('//*[@id="free-learning-dropin"]/div[1]/div/div/div/div/div[1]/a/img'
+                                              )[0].get_attribute("src")
         today = time.strftime("%d/%m")
         msg_slack = f"_Libro gratis solo hoy ({today}):_ *{title}*: {url}"
         print(msg_slack)
@@ -41,7 +41,7 @@ def send_message_slack(msg_slack, image):
     '''send a message in slack if daily packtpub free ebook about python'''
     slack_client = SlackClient('SLACK_TOKEN')
 
-    slack_client.api_call(
+    response = slack_client.api_call(
         "chat.postMessage",
         channel='C2DEJD2MN',
         as_user="true:",
@@ -50,6 +50,8 @@ def send_message_slack(msg_slack, image):
             "text": msg_slack,
             "image_url": image
             }])
+
+    print(response['ok'])
 
 
 def send_message_twitter(msg_twitter):
