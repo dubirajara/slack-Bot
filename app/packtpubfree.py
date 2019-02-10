@@ -39,7 +39,7 @@ def get_packtpub():
 
 def send_message_slack(msg_slack, image):
     '''send a message in slack if daily packtpub free ebook about python'''
-    slack_client = SlackClient('SLACK_TOKEN')
+    slack_client = SlackClient(os.environ.get('SLACK_TOKEN'))
 
     response = slack_client.api_call(
         "chat.postMessage",
