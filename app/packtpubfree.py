@@ -1,15 +1,19 @@
 import os
 import re
 import time
+import datetime as dt
 
 from slackclient import SlackClient
 from selenium import webdriver
 import twitter
 
+slack_client = SlackClient(os.environ.get('SLACK_TOKEN'))
+channel = os.environ.get('SLACK_CHANNEL')
+
 
 def get_packtpub():
     '''Scraping packtpub web searching daily free ebook about python'''
-    patterns = 'Python|Django|Flask|scikit-learn|pandas|API'
+    patterns = 'Python|Django|Flask|scikit-learn|pandas'
     url = 'https://www.packtpub.com/packt/offers/free-learning'
 
     driver = webdriver.PhantomJS()
@@ -20,8 +24,9 @@ def get_packtpub():
 
     if re.search(patterns, text):
         title = driver.find_element_by_class_name("product__title").text
-        image = driver.find_elements_by_xpath('//*[@id="free-learning-dropin"]/div[1]/div/div/div/div/div[1]/a/img'
-                                              )[0].get_attribute("src")
+        image = driver.find_elements_by_xpath(
+            '//*[@id="free-learning-dropin"]/div[1]/div/div/div/div/div[1]/a/img'
+                                            )[0].get_attribute("src")
         today = time.strftime("%d/%m")
         msg_slack = f"_Libro gratis solo hoy ({today}):_ *{title}*: {url}"
         print(msg_slack)
@@ -39,11 +44,9 @@ def get_packtpub():
 
 def send_message_slack(msg_slack, image):
     '''send a message in slack if daily packtpub free ebook about python'''
-    slack_client = SlackClient(os.environ.get('SLACK_TOKEN'))
-
     response = slack_client.api_call(
         "chat.postMessage",
-        channel='C2DEJD2MN',
+        channel=channel,
         as_user="true:",
         attachments=[{
             "color": "#36a64f",
@@ -64,5 +67,20 @@ def send_message_twitter(msg_twitter):
     api.PostUpdate(msg_twitter)
 
 
+def delete_slack_message():
+    latest_ts = dt.datetime.timestamp(dt.datetime.now())
+
+    response = slack_client.api_call(
+        'channels.history',
+        channel=channel,
+        latest=latest_ts)
+
+    all_msgs = (item['ts'] for item in response['messages'] if response['messages'][0]['user'] == 'U4ZCW6UCW')
+
+    for msg in all_msgs:
+        slack_client.api_call('chat.delete', channel=channel, ts=msg)
+
+
 if __name__ == "__main__":
+    delete_slack_message()
     get_packtpub()
