@@ -7,7 +7,7 @@ from slackclient import SlackClient
 
 from app.models import db, Slack
 from app.api.api import api
-from config import Config
+from .config import Config
 
 app = Flask(__name__)
 app.register_blueprint(api)

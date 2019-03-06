@@ -33,6 +33,7 @@ def get_packtpub():
         msg_twitter = f"Free Ebook today ({today}): " \
                       f"{title}: http://bit.ly/PacktDailyOffer #Python #PacktPub #FreeLearning"
 
+        delete_slack_message()
         send_message_slack(msg_slack, image)
         send_message_twitter(msg_twitter)
 
@@ -82,5 +83,4 @@ def delete_slack_message():
 
 
 if __name__ == "__main__":
-    delete_slack_message()
     get_packtpub()
