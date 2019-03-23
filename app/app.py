@@ -1,7 +1,7 @@
 import datetime
 
 import bleach
-from flask import Flask, render_template, request, Response
+from flask import Flask, render_template, request, Response, url_for
 from sqlalchemy import desc
 from slackclient import SlackClient
 
@@ -36,12 +36,17 @@ def linkify(link):
 
 
 @app.route('/')
-@app.route('/<int:page>', methods=['GET'])
-def home(page=1):
-    '''retrieve all msgs and render in home'''
+@app.route('/home')
+def home():
+    page = request.args.get('page', 1, type=int)
     msgs = Slack.query.order_by(
         desc(Slack.created)).paginate(page, config.POSTS_PER_PAGE, False)
-    return render_template('index.html', msgs=msgs)
+    next_url = url_for('home', page=msgs.next_num) \
+        if msgs.has_next else None
+    prev_url = url_for('home', page=msgs.prev_num) \
+        if msgs.has_prev else None
+    return render_template('index.html', msgs=msgs.items, next_url=next_url,
+                           prev_url=prev_url)
 
 
 @app.route('/user/<path:username>/', methods=['GET'])
