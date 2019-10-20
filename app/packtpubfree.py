@@ -28,7 +28,7 @@ def get_packtpub():
             '//*[@id="free-learning-dropin"]/div[1]/div/div/div/div/div[1]/a/img'
                                             )[0].get_attribute("src")
         today = time.strftime("%d/%m")
-        msg_slack = f"_Libro gratis solo hoy ({today}):_ *{title}*: {url}"
+        msg_slack = f":python: _Libro gratis solo hoy ({today}):_ *{title}*: {url}"
         print(msg_slack)
         msg_twitter = f"Free Ebook today ({today}): " \
                       f"{title}: http://bit.ly/PacktDailyOffer #Python #PacktPub #FreeLearning"
