@@ -3,8 +3,7 @@ import datetime
 import bleach
 from flask import Flask, render_template, request, Response, url_for
 from sqlalchemy import desc
-from slackclient import SlackClient
-
+import slack
 from app.models import db, Slack
 from app.api.api import api
 from .config import Config
@@ -15,7 +14,7 @@ app.config.from_object(Config)
 db.init_app(app)
 
 config = Config()
-slack_client = SlackClient(config.SLACK_TOKEN)
+slack_client = slack.WebClient(token=config.SLACK_TOKEN)
 
 
 def send_message(channel_id, message):
