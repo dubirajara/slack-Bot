@@ -3,11 +3,11 @@ import re
 import time
 import datetime as dt
 
-from slackclient import SlackClient
+import slack
 from selenium import webdriver
 import twitter
 
-slack_client = SlackClient(os.environ.get('SLACK_TOKEN'))
+slack_client = slack.WebClient(token=os.environ.get('SLACK_TOKEN'))
 channel = os.environ.get('SLACK_CHANNEL')
 
 
