@@ -1,11 +1,11 @@
 import os
 import re
 import time
-import datetime as dt
 
 import slack
 from selenium import webdriver
 import twitter
+from slack.errors import SlackApiError
 
 slack_client = slack.WebClient(token=os.environ.get('SLACK_TOKEN'))
 channel = os.environ.get('SLACK_CHANNEL')
@@ -20,13 +20,11 @@ def get_packtpub():
     driver.implicitly_wait(10)
     driver.get(url)
 
-    text = driver.find_element_by_class_name("product__right").text
+    text = driver.find_element_by_class_name("product-info__content").text
 
     if re.search(patterns, text):
-        title = driver.find_element_by_class_name("product__title").text
-        image = driver.find_elements_by_xpath(
-            '//*[@id="free-learning-dropin"]/div[1]/div/div/div/div/div[1]/a/img'
-                                            )[0].get_attribute("src")
+        title = driver.find_element_by_class_name("product-info__title").text
+        image = driver.find_element_by_class_name("product-image").get_attribute('src')
         today = time.strftime("%d/%m")
         msg_slack = f":python: _Libro gratis solo hoy ({today}):_ *{title}*: {url}"
         print(msg_slack)
@@ -45,8 +43,7 @@ def get_packtpub():
 
 def send_message_slack(msg_slack, image):
     '''send a message in slack if daily packtpub free ebook about python'''
-    response = slack_client.api_call(
-        "chat.postMessage",
+    response = slack_client.chat_postMessage(
         channel=channel,
         as_user="true:",
         attachments=[{
@@ -69,17 +66,15 @@ def send_message_twitter(msg_twitter):
 
 
 def delete_slack_message():
-    latest_ts = dt.datetime.timestamp(dt.datetime.now())
-
-    response = slack_client.api_call(
-        'channels.history',
-        channel=channel,
-        latest=latest_ts)
+    response = slack_client.conversations_history(channel=channel)
 
     all_msgs = (item['ts'] for item in response['messages'] if response['messages'][0]['user'] == 'U4ZCW6UCW')
 
     for msg in all_msgs:
-        slack_client.api_call('chat.delete', channel=channel, ts=msg)
+        try:
+            slack_client.chat_delete(channel=channel, ts=msg)
+        except SlackApiError:
+            ...
 
 
 if __name__ == "__main__":
