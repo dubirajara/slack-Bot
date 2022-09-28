@@ -7,5 +7,5 @@ lxml==4.7.1
 psycopg2-binary==2.8.4
 python-twitter==3.5
 requests==2.22.0
-selenium==4.1.2
+selenium==4.5.0
 slackclient==2.9.3
