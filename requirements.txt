@@ -4,7 +4,7 @@ Flask-SQLAlchemy==2.5.1
 Flask==2.0.3
 gunicorn==20.0.4
 lxml==4.7.1
-psycopg2-binary==2.8.4
+psycopg2-binary==2.9.6
 python-twitter==3.5
 requests==2.22.0
 selenium==4.1.2
